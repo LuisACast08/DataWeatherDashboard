@@ -1,45 +1,8 @@
-import requests #Se importa "requests" para hacer solicitudes HTTP
-import csv
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from pathlib import Path
 import pandas as pd
 
-#Solicitud GET del endpoint history.json 
-
-response = requests.get("http://api.weatherapi.com/v1/history.json", params={
-
-    "key": "13014822709c4c27ac3214249251906",
-    "q": "Tunja",
-    "dt": "2025-06-21"
-})
-
-#Muestra los datos del historial climático de un día durante sus 24h
-if response.status_code == 200:
-    data = response.json()
-    dataFilter = data["forecast"]["forecastday"][0]["hour"]
-    headers = dataFilter[0].keys()
-    dir = Path("backend/app/data/dataW.csv")
-    # print(json.dumps(dataFilter, indent=4, ensure_ascii=False)) #Imprime datos filtrados
-    
-    if dir.is_file(): #Valida si ya se ha creado el archivo .csv
-        print("Archivos ya creados!")
-    else:
-        #Se crea archivo .csv
-        with open("backend/app/data/dataW.csv", "w", newline="", encoding="utf-8") as fileW: #Convierte la data filtrada en archivo CSV
-            writer = csv.DictWriter(fileW, fieldnames=headers) 
-            writer.writeheader() #Se crean encabezados del archivo CSV
-            writer.writerows(dataFilter)
-            print("Archivo .CSV creado exitosamente!")
-            
-        #Se crea archivo .xlsx a partir del archivo .csv
-        df= pd.read_csv("backend/app/data/dataW.csv") #Crea dataframe del archivo "dataW.csv"
-        df.to_excel("backend/app/data/dataW.xlsx", index= False, engine="openpyxl")
-        print("Archivo .XLSX creado exitosamente!")
-else:
-    print("Error al obtener datos", response.status_code)
-
-#Test endpoint con http.server
+#Se utiliza inicialmente endpoints con http.server
     #Se crea una clase para manipular o responder a las solicitudes "GET, POST, PUT, etc..."
 
 class Handler(BaseHTTPRequestHandler):
