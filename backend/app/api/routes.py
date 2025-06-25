@@ -11,12 +11,14 @@ class Handler(BaseHTTPRequestHandler):
             case "/":
                 self.send_response(200)
                 self. send_header("Content-type", "application/json")
+                self.send_header("Access-Control-Allow-Origin", "http://127.0.0.1:5500")
                 self.end_headers()
                 message = {"message": "Welcome to my application API!"}
                 self.wfile.write(json.dumps(message).encode())
             case "/tableData":
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
+                self.send_header("Access-Control-Allow-Origin", "http://127.0.0.1:5500")
                 self.end_headers()
                 message = pd.read_csv("backend/app/data/dataW.csv")
                 messageTable = message.to_html(index=False, border=1, classes="tabla", justify="center")
