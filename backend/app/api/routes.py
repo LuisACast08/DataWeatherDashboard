@@ -14,33 +14,20 @@ class Handler(BaseHTTPRequestHandler):
                 self.end_headers()
                 message = {"message": "Welcome to my application API!"}
                 self.wfile.write(json.dumps(message).encode())
-            case "/current":
+            case "/tableData":
                 self.send_response(200)
-                self. send_header("Content-type", "application/json")
+                self.send_header("Content-type", "text/html")
                 self.end_headers()
-                if response.status_code == 200:
-                    message = response.json()
-                else:
-                    message = {"message": "Error"+ response.status_code}
-                self.wfile.write(json.dumps(message).encode())
-            case "/data":
-                if response.status_code == 200:
-                    try:
-                        dfXlsx = pd.read_excel("backend/app/data/dataW.xlsx") #Se lee el archivo Excel
-                        htmlTable = dfXlsx.to_html(index=False, border=1, classes="tabla", justify="center") #Se convierte a formato HTML
-                        
-                        self.send_response(200)
-                        self. send_header("Content-type", "text/html")
-                        self.end_headers()
-                        self.wfile.write(htmlTable.encode("utf-8")) #Se muestra tabla
-                    except FileNotFoundError:
-                        self.send_response(404)
-                        self.end_headers()
-                        self.wfile.write("Archivo .xlsx no encontrado.")
-                else:
-                    message = {"message": "Error"+ response.status_code}
-                    self.wfile.write(json.dumps(message).encode())
-
+                message = pd.read_csv("backend/app/data/dataW.csv")
+                messageTable = message.to_html(index=False, border=1, classes="tabla", justify="center")
+                self.wfile.write(messageTable.encode("utf-8"))
+            case _:
+                self.send_response(404)
+                self.send_header("Content-type", "text/html")
+                self.end_headers()
+                message = "Ruta desconocida..."
+                self.wfile.write(message.encode("utf-8"))
+                
 #Config del servidor
 def executeServer():
     port = 8000

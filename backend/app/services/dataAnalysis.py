@@ -1,16 +1,10 @@
 import pandas as pd
 import json
 import csv
-from pathlib import Path
-import requests 
+from pathlib import Path 
+import weatherApi as wApi
 
-
-#Solicitud GET a la API del endpoint history.json 
-response = requests.get("http://api.weatherapi.com/v1/history.json", params={
-    "key": "13014822709c4c27ac3214249251906",
-    "q": "Tunja",
-    "dt": "2025-06-21"
-})
+response = wApi.Apiclass.weatherHist()
 
 def extractData():
     #Si la API esta Ok se extraen los datos
