@@ -37,6 +37,3 @@ def executeServer():
     print(f"Servidor corriendo en http://localhost:{port}")
     server.serve_forever()
     
-#Se ejecuta el servidor
-if __name__ == "__main__":
-    executeServer()
