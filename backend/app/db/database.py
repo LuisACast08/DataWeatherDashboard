@@ -16,11 +16,3 @@ class dataWeatherDB():
         connx.close()
         
         print("Migración exitosa!")
-        
-        # #Se verifica la migración de datos
-        # connx = sqlite3.connect("dataWeather.db")
-        # cursor  = connx.cursor()
-        
-        # for row in cursor.execute("SELECT * FROM dataWeather"):
-        #     print(row)
-        # connx.close()

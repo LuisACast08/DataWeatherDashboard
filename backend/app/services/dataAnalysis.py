@@ -2,9 +2,10 @@ import pandas as pd
 import json
 import csv
 from pathlib import Path 
-import services.weatherApi as wApi
+import services.api.weatherApi as wApi
 
 response = wApi.Apiclass.weatherHist() 
+dirDataW = Path("backend/app/data/dataW.csv")
 
 class dataAnalisysClass():
     def extractData():
@@ -14,9 +15,9 @@ class dataAnalisysClass():
             dataFilter = data["forecast"]["forecastday"][0]["hour"]#Se filtra "data" solo extrallendo el historial climático de un día durante sus 24h
             #print(json.dumps(dataFilter, indent=4, ensure_ascii=False)) #Imprime datos filtrados
             
-            dir = Path("backend/app/data/dataW.csv")
             
-            if dir.is_file(): #Valida si ya se ha creado el archivo .csv
+            
+            if dirDataW.is_file(): #Valida si ya se ha creado el archivo .csv
                 print("Archivos ya creados!")
             else:
                 #Se crea archivo .csv
@@ -32,4 +33,10 @@ class dataAnalisysClass():
         else:
             print("Error al obtener datos", response.status_code)
 
+    #Entregar análisis estadístico
+    def statisticA():
+            df = pd.read_csv("backend/app/data/dataW.csv")
+            return df.describe()
+
+        
 
