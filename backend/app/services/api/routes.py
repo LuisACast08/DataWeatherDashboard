@@ -27,7 +27,7 @@ class Handler(BaseHTTPRequestHandler):
                 except FileNotFoundError:
                     conn = sqlite3.connect("backend/app/data/dataWeather.db")
                     message = pd.read_sql_query("SELECT * FROM dataWeather", conn)
-                messageTable = message.to_html(index=False, border=1, classes="tabla", justify="center")
+                messageTable = message.to_json()
                 self.wfile.write(messageTable.encode("utf-8"))
             case "/analisysSt":
                 self.send_response(200)
@@ -35,8 +35,8 @@ class Handler(BaseHTTPRequestHandler):
                 self.send_header("Access-Control-Allow-Origin", "http://127.0.0.1:5500")
                 self.end_headers()
                 df = SDataA.dataAnalisysClass.statisticA()
-                htmlTable = df.to_html(index=True, border=1, classes="tabla", justify="center")
-                self.wfile.write(htmlTable.encode("utf-8"))
+                message = df.to_json()
+                self.wfile.write(message.encode("utf-8"))
                 
             case _:
                 self.send_response(404)
