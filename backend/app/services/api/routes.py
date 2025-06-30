@@ -1,6 +1,7 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import pandas as pd
+import sqlite3
 import services.dataAnalysis as SDataA
 
 #Se utiliza inicialmente endpoints con http.server
@@ -21,7 +22,11 @@ class Handler(BaseHTTPRequestHandler):
                 self.send_header("Content-type", "text/html")
                 self.send_header("Access-Control-Allow-Origin", "http://127.0.0.1:5500")
                 self.end_headers()
-                message = pd.read_csv("backend/app/data/dataW.csv")
+                try:
+                    message = pd.read_csv("backend/app/data/dataW.csv")
+                except FileNotFoundError:
+                    conn = sqlite3.connect("backend/app/data/dataWeather.db")
+                    message = pd.read_sql_query("SELECT * FROM dataWeather", conn)
                 messageTable = message.to_html(index=False, border=1, classes="tabla", justify="center")
                 self.wfile.write(messageTable.encode("utf-8"))
             case "/analisysSt":
